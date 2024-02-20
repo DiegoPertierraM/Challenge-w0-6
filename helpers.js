@@ -53,10 +53,11 @@ const generateCardArray = () => {
   return cardArray;
 };
 
-const solveRound = (userChoice, machineCard, actualCard) => {
+const solveRound = (userChoice, machineCard, actualCard, userName) => {
   const messages = [
-    `Ganaste! La carta era ${actualCard.name} de ${actualCard.suit}`,
-    `Perdiste. La carta era ${actualCard.name} de ${actualCard.suit}`,
+    `${userName} Ganaste! La carta era ${actualCard.name} de ${actualCard.suit}`,
+    `${userName} Perdiste. La carta era ${actualCard.name} de ${actualCard.suit}`,
+    `${userName} tiene que elegir si la siguiente carta es 'mayor' o 'menor'!`,
   ];
   let matchIncrement = 0;
   let scoreIncrement = 0;
@@ -105,6 +106,9 @@ export const playCardGame = () => {
   alert(`Bienvenido ${userName}! Las reglas del juego son las siguientes:
   A cada turno, se extraerá una carta de la baraja francesa, y se te preguntará
   si crees que la siguiente carta en el mazo va a ser mayor o menor.
+  Los valores son de mayor a menor:
+  A, K, Q, J, 10, 9, 8 , 7, 6, 5, 4, 3, 2.
+  ♥ Corazones ♦ Diamantes ♣ Tréboles ♠ Espadas.
   Si aciertas, se te sumará un punto a tu puntuación.
   En cualquier momento puedes darle a cancelar y parar el juego.`);
   let playAgain = true;
@@ -112,18 +116,33 @@ export const playCardGame = () => {
   while (playAgain === true) {
     const machineCard = pickRandomCard(cardArray);
     alert(`La carta es el ${machineCard.name} de ${machineCard.suit}`);
-    const userChoice = prompt(
-      '¿Crees que la siguiente carta será mayor o menor?'
-    );
-    if (userChoice === null) {
-      playAgain = false;
-      return alert(byeMessage);
-    }
     const actualCard = pickRandomCard(cardArray);
-    const roundInfo = solveRound(userChoice, machineCard, actualCard);
-    score += roundInfo.scoreIncrement;
-    match += roundInfo.matchIncrement;
-    alert(roundInfo.message);
+    do {
+      let userChoice = prompt(
+        '¿Crees que la siguiente carta será mayor o menor?'
+      ).toLowerCase();
+      const { scoreIncrement, matchIncrement, message } = solveRound(
+        userChoice,
+        machineCard,
+        actualCard,
+        userName
+      );
+      score += scoreIncrement;
+      match += matchIncrement;
+      alert(message);
+      if (matchIncrement) {
+        break;
+      }
+    } while (true);
+
+    console.log('Cards left', cardArray.length);
+    if (!cardArray.length) {
+      alert('Se acabaron las cartas!');
+      break;
+    }
+    playAgain = confirm(`${userName} quieres jugar de nuevo?.
+De momento has jugado ${match} veces y ganado ${score} veces!`);
   }
-  return alert(byeMessage);
+  alert(`Gracias por haber jugado **${userName}**
+Has jugado ${match} vez y ganado ${score} vez!`);
 };
