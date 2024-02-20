@@ -1,3 +1,3 @@
-import { generateCardGame } from './helpers.js';
+import { playCardGame } from './helpers.js';
 
-console.log(generateCardGame());
+console.log(playCardGame());

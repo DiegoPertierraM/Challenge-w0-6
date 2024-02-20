@@ -1,18 +1,61 @@
-const getRandomNumber = () => {
-  const randomNumber = Math.trunc(Math.random() * 53);
+function shuffleArray(arr) {
+  let shuffledArr = arr
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+  return shuffledArr;
+}
+
+const getRandomNumber = (maxNum) => {
+  const randomNumber = Math.trunc(Math.random() * maxNum);
+  return randomNumber;
 };
 
-export const generateCardGame = () => {
-  const espadas = [];
-  const picas = [];
-  const treboles = [];
-  const corazones = [];
-  for (let i = 2; i < 15; i++) {
-    espadas.push({ number: i, suit: 'espadas', drawn: false });
-    picas.push({ number: i, suit: 'picas', drawn: false });
-    treboles.push({ number: i, suit: 'treboles', drawn: false });
-    corazones.push({ number: i, suit: 'corazones', drawn: false });
+const pickRandomCard = (arr) => {
+  let randomNumber = getRandomNumber(arr.length);
+  console.log(
+    `La carta es ${arr[randomNumber].number} de ${arr[randomNumber].suit}`
+  );
+  arr.splice(arr[randomNumber], 1);
+  return arr[randomNumber].number;
+};
+
+export const generateCardArray = () => {
+  const diamantes = [
+    { number: 'A', suit: 'diamantes' },
+    { number: 'K', suit: 'diamantes' },
+    { number: 'Q', suit: 'diamantes' },
+    { number: 'J', suit: 'diamantes' },
+  ];
+  const picas = [
+    { number: 'A', suit: 'picas' },
+    { number: 'K', suit: 'picas' },
+    { number: 'Q', suit: 'picas' },
+    { number: 'J', suit: 'picas' },
+  ];
+  const treboles = [
+    { number: 'A', suit: 'treboles' },
+    { number: 'K', suit: 'treboles' },
+    { number: 'Q', suit: 'treboles' },
+    { number: 'J', suit: 'treboles' },
+  ];
+  const corazones = [
+    { number: 'A', suit: 'corazones' },
+    { number: 'K', suit: 'corazones' },
+    { number: 'Q', suit: 'corazones' },
+    { number: 'J', suit: 'corazones' },
+  ];
+  for (let i = 2; i < 11; i++) {
+    diamantes.push({ number: i, suit: 'diamantes' });
+    picas.push({ number: i, suit: 'picas' });
+    treboles.push({ number: i, suit: 'treboles' });
+    corazones.push({ number: i, suit: 'corazones' });
   }
-  const cardArray = [...espadas, ...picas, ...treboles, ...corazones];
+  const cardArray = [...diamantes, ...picas, ...treboles, ...corazones];
   return cardArray;
+};
+
+export const playCardGame = () => {
+  const cardArray = shuffleArray(generateCardArray());
+  return pickRandomCard(cardArray);
 };
